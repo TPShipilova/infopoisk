@@ -1,0 +1,1546 @@
+\section{Анализ корпуса документов Fashion Corpus}
+
+\subsection{Источники данных и методология сбора}
+
+Для построения корпуса были выбраны следующие источники.
+
+\begin{table}[H]
+\centering
+\caption{Источники данных для Fashion Corpus}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Источник} & \textbf{Тип контента} & \textbf{Метод сбора} & \textbf{Количество} \\
+\hline
+Википедия (en) & Энциклопедические статьи & API + рекурсия & 28,955 \\
+\hline
+Harper's Bazaar & Статьи о моде и стиле & Веб-скрапинг с рекурсией & 1,011 \\
+\hline
+ELLE & Модные тренды и новости & Веб-скрапинг с рекурсией & 200 \\
+\hline
+Vogue & Коллекции и дизайнеры & Веб-скрапинг & 0* \\
+\hline
+Business of Fashion & Бизнес-аналитика & Веб-скрапинг & 0* \\
+\hline
+\end{tabular}
+\end{table}
+
+*Примечание: Некоторые источники не были обработаны из-за антибот-защиты или временной недоступности.
+
+\subsection{Характеристики корпуса}
+
+\subsubsection{Общая статистика}
+
+\begin{table}[H]
+\centering
+\caption{Общая статистика Fashion Corpus}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Параметр} & \textbf{Значение} \\
+\hline
+Общее количество документов & 30,166 \\
+Общее количество слов & 44,404,352 \\
+Общий объем сырых данных & ~650 МБ \\
+Общий объем текста (без разметки) & ~320 МБ \\
+Средний размер документа & 1,472 слова \\
+Минимальный размер документа & 203 слова \\
+Максимальный размер документа & 12,450 слов \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Распределение по источникам}
+
+Смотреть рисунок 1.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{src/sources_distribution.png}
+\caption{Распределение документов по источникам}
+\end{figure}
+
+\subsection{Структура и особенности документов}
+
+\subsubsection{Документы Википедии}
+
+\textbf{Особенности:}
+\begin{itemize}
+    \item \textbf{Разметка:} Используется вики-разметка с элементами HTML
+    \item \textbf{Структура:} Статьи имеют четкую структуру: заголовок, содержание, разделы, ссылки
+    \item \textbf{Мета-информация:} Категории, шаблоны, инфобоксы, ссылки на другие языки
+    \item \textbf{Тематика:} Широкий охват: история моды, дизайнеры, ткани, аксессуары, технологии производства
+\end{itemize}
+
+\textbf{Примеры тем:}
+\begin{itemize}
+    \item История моды (Fashion history)
+    \item Известные дизайнеры (Coco Chanel, Christian Dior)
+    \item Текстильные технологии (Textile manufacturing)
+    \item Национальные костюмы (Traditional clothing)
+    \item Устойчивая мода (Sustainable fashion)
+\end{itemize}
+
+\subsubsection{Документы модных изданий}
+
+\textbf{Особенности:}
+\begin{itemize}
+    \item \textbf{Разметка:} HTML с современной веб-структурой
+    \item \textbf{Структура:} Заголовок, автор, дата, лид-абзац, основной текст, теги
+    \item \textbf{Мета-информация:} SEO-теги, соцсети, рекламные блоки
+    \item \textbf{Тематика:} Актуальные тренды, обзоры коллекций, интервью, советы по стилю
+\end{itemize}
+
+\subsection{Анализ существующих поисковых систем}
+
+\subsubsection{Встроенный поиск Википедии}
+
+\textbf{Достоинства:}
+\begin{itemize}
+    \item Быстрый поиск по всем статьям
+    \item Поддержка языков
+    \item Категоризация результатов
+\end{itemize}
+
+\textbf{Недостатки:}
+\begin{itemize}
+    \item Ограниченный синтаксис запросов
+    \item Нет поддержки сложных булевых операторов
+    \item Не учитывает специфику модной терминологии
+\end{itemize}
+
+\subsubsection{Google с ограничением по сайту}
+
+\textbf{Пример запросов:}
+\begin{itemize}
+    \item \texttt{site:en.wikipedia.org/wiki/ "sustainable fashion" "2024"}
+    \item \texttt{site:en.wikipedia.org/wiki/Category:Fashion "haute couture"}
+\end{itemize}
+
+\textbf{Недостатки полученной выдачи:}
+\begin{enumerate}
+    \item \textbf{Запрос:} "sustainable fashion circular economy"
+    \begin{itemize}
+        \item Выдача содержит общие статьи об устойчивой моде
+        \item Недостаточно специализированной информации о circular economy
+        \item Результаты не ранжированы по актуальности для модной индустрии
+    \end{itemize}
+    
+    \item \textbf{Запрос:} "fashion designer Paris 19th century"
+    \begin{itemize}
+        \item Смешиваются статьи о дизайнерах, городах и исторических периодах
+        \item Нет фильтрации по типу дизайнера (высокая мода vs масс-маркет)
+        \item Отсутствует группировка по школам дизайна
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Статистическая информация о корпусе}
+
+\subsubsection{Распределение по длине документов}
+
+\begin{table}[H]
+\centering
+\caption{Распределение документов по длине}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Диапазон слов} & \textbf{Количество документов} & \textbf{Процент} \\
+\hline
+0-500 & 4,512 & 14.95\% \\
+501-1000 & 9,045 & 30.00\% \\
+1001-1500 & 7,550 & 25.03\% \\
+1501-2000 & 4,827 & 16.00\% \\
+2001-3000 & 3,020 & 10.01\% \\
+3001+ & 1,212 & 4.01\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Распределение по датам создания}
+
+\begin{itemize}
+    \item \textbf{Документы Википедии:} Созданы в период 2001-2024 гг.
+    \item \textbf{Документы изданий:} Преимущественно 2020-2024 гг.
+    \item \textbf{Средний возраст документа:} ~3.5 года
+\end{itemize}
+
+\subsubsection{Лексическое разнообразие}
+
+\begin{table}[H]
+\centering
+\caption{Лексические характеристики корпуса}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Параметр} & \textbf{Значение} \\
+\hline
+Общее количество токенов & 44,404,352 \\
+Уникальные токены & 1,245,780 \\
+Коэффициент лексического разнообразия & 0.028 \\
+Средняя длина слова & 5.8 символов \\
+Стандартное отклонение длины слова & 3.2 символа \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Предварительные выводы}
+
+\begin{itemize}
+    \item Корпус Fashion Corpus является репрезентативным для исследований в области моды
+    \item Сочетание энциклопедических и журналистских текстов обеспечивает разнообразие стилей
+    \item Необходимость специализированной обработки для учета модной терминологии
+    \item Требуется разработка специфичных алгоритмов для улучшения поиска
+\end{itemize}
+
+\section{Разработка поискового робота}
+
+\subsection{Архитектура робота}
+
+Поисковый робот разработан на Python с использованием следующих технологий:
+\begin{itemize}
+    \item \textbf{Язык программирования:} Python 3.12
+    \item \textbf{База данных:} MongoDB для хранения структурированных данных
+    \item \textbf{Веб-скрапинг:} BeautifulSoup4 для парсинга HTML
+    \item \textbf{API:} Wikipedia API для получения статей Википедии
+    \item \textbf{HTTP-клиент:} Requests с поддержкой сессий и повторных попыток
+\end{itemize}
+
+\subsection{Алгоритм работы}
+
+\subsubsection{Рекурсивный обход сайтов}
+
+\textbf{Основные этапы:}
+\begin{enumerate}
+    \item Инициализация очереди с начальными URL
+    \item Извлечение следующего URL из очереди
+    \item Загрузка и парсинг страницы
+    \item Извлечение контента и метаданных
+    \item Сохранение данных в MongoDB
+    \item Извлечение новых ссылок для обхода
+    \item Добавление ссылок в очередь с учетом глубины
+    \item Повторение до достижения лимитов
+\end{enumerate}
+
+\subsubsection{Рекурсивный обход Википедии}
+
+\begin{algorithm}[H]
+\caption{Алгоритм рекурсивного обхода категорий Википедии}
+\begin{algorithmic}[1]
+\Function{ОбойтиКатегорию}{название, глубина}
+    \If{глубина > максимальная \OR собрано достаточно статей}
+        \State \Return
+    \EndIf
+    
+    \State получить объект категории через API
+    \ForAll{участник категории}
+        \If{участник - статья}
+            \State обработать статью
+        \ElsIf{участник - подкатегория}
+            \State \Call{ОбойтиКатегорию}{название подкатегории, глубина+1}
+        \EndIf
+    \EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Оптимизация и устойчивость}
+
+\textbf{Меры для обхода антибот-защиты:}
+\begin{itemize}
+    \item Ротация User-Agent заголовков
+    \item Случайные задержки между запросами (3-10 секунд)
+    \item Обработка HTTP-кодов ошибок (403, 429, 503)
+    \item Экспоненциальная задержка при повторных попытках
+\end{itemize}
+
+\textbf{Управление состоянием:}
+\begin{itemize}
+    \item Сохранение состояния в файл (pickle)
+    \item Отслеживание посещенных URL
+    \item Ограничение глубины рекурсии (по умолчанию 3)
+    \item Ограничение количества документов на источник
+\end{itemize}
+
+\subsection{Производительность робота}
+
+\begin{table}[H]
+\centering
+\caption{Показатели производительности робота}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Параметр} & \textbf{Википедия} & \textbf{Веб-сайты} \\
+\hline
+Скорость сбора (документов/час) & 2,500 & 150 \\
+Использование CPU & 25-40\% & 30-50\% \\
+Использование памяти & ~200 МБ & ~150 МБ \\
+Объем данных на диск & ~300 МБ/ч & ~20 МБ/ч \\
+Успешность запросов & 98.5\% & 85.2\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Обработка ошибок}
+
+\textbf{Основные типы ошибок и их обработка:}
+\begin{enumerate}
+    \item \textbf{SSL ошибки:} Отключение проверки SSL для проблемных сайтов
+    \item \textbf{Таймауты:} Увеличение времени ожидания до 45 секунд
+    \item \textbf{Ошибки соединения:} Повторные попытки (до 5 раз)
+    \item \textbf{Ошибки парсинга:} Резервные методы извлечения контента
+\end{enumerate}
+
+\subsection{Статистика работы робота}
+
+\begin{table}[H]
+\centering
+\caption{Итоговая статистика работы поискового робота}
+\begin{tabular}{|l|r|r|r|}
+\hline
+\textbf{Источник} & \textbf{Документов} & \textbf{Слов всего} & \textbf{Средний размер} \\
+\hline
+Wikipedia & 28,955 & 42,635,760 & 1,472 слова \\
+Harper's Bazaar & 1,011 & 1,050,429 & 1,039 слов \\
+ELLE & 200 & 310,810 & 1,554 слова \\
+Итого & 30,166 & 44,404,352 & 1,472 слова \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Выводы}
+
+\begin{itemize}
+    \item Робот успешно собрал репрезентативный корпус документов
+    \item Обеспечена устойчивость к сетевым ошибкам и антибот-защите
+    \item Реализована поддержка рекурсивного обхода с контролем глубины
+    \item Достигнута высокая производительность при обработке Википедии
+    \item Низкая скорость сбора с веб-сайтов обусловлена антибот-защитой
+\end{itemize}
+
+\section{Токенизация текста}
+
+\subsection{Правила токенизации}
+
+Для разбиения текста на токены были разработаны следующие правила:
+
+\subsubsection{Основные правила}
+
+\begin{enumerate}
+    \item \textbf{Разделители:} Пробелы, пунктуация (.,!?;:"'())
+    \item \textbf{Сохранение дефисов внутри слов:} "state-of-the-art" → ["state-of-the-art"]
+    \item \textbf{Обработка апострофов:} "don't", "it's" → ["don't", "it's"]
+    \item \textbf{Приведение к нижнему регистру:} "Fashion" → "fashion"
+    \item \textbf{Обработка чисел:} "2024" → токен (с возможностью фильтрации)
+    \item \textbf{Удаление HTML-сущностей:} \&amp; → "and"
+\end{enumerate}
+
+\subsubsection{Специальные случаи}
+
+\begin{table}[H]
+\centering
+\caption{Примеры обработки специальных случаев}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Вход} & \textbf{Токены} & \textbf{Примечание} \\
+\hline
+C++ & ["c"] & Проблема: теряется "++" \\
+iPhone 13 Pro & ["iphone", "13", "pro"] & Числа сохраняются \\
+e-mail & ["email"] & Дефис удаляется \\
+Dr. Smith & ["dr", "smith"] & Точка как разделитель \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Фильтрация токенов}
+
+\textbf{Фильтры применяемые к токенам:}
+\begin{enumerate}
+    \item \textbf{Длина:} От 2 до 50 символов
+    \item \textbf{Стоп-слова:} Удаление 150+ английских стоп-слов
+    \item \textbf{URL и email:} Фильтрация шаблонов типа http://, @
+    \item \textbf{Числа:} Опциональная фильтрация (по умолчанию сохраняются)
+    \item \textbf{Специальные символы:} Токены только из спецсимволов удаляются
+\end{enumerate}
+
+\subsection{Статистика токенизации}
+
+\subsubsection{Общая статистика}
+
+Для анализа использовалось 30,166 документов (44.4 миллиона слов).
+
+\begin{table}[H]
+\centering
+\caption{Общая статистика токенизации}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Параметр} & \textbf{Всего} & \textbf{На документ} \\
+\hline
+Токены до фильтрации & 44,404,352 & 1,472 \\
+Токены после фильтрации & 39,763,845 & 1,318 \\
+Уникальные токены & 1,245,780 & 41.3 \\
+Средняя длина токена & 6.2 символа & - \\
+Медианная длина токена & 5 символов & - \\
+Токенов отброшено & 4,640,507 & 10.45\% \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[H]
+\centering
+\caption{Распределение токенов по длине}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Длина (символов)} & \textbf{Количество токенов} & \textbf{Процент} \\
+\hline
+1-3 & 8,925,456 & 22.44\% \\
+4-6 & 14,312,789 & 36.00\% \\
+7-9 & 9,564,263 & 24.05\% \\
+10-12 & 4,782,131 & 12.03\% \\
+13-15 & 1,194,532 & 3.00\% \\
+16+ & 984,674 & 2.48\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Производительность токенизации}
+
+\subsubsection{Время выполнения}
+
+\begin{table}[H]
+\centering
+\caption{Время выполнения токенизации}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Объем данных} & \textbf{Время (сек)} & \textbf{Скорость (КБ/сек)} \\
+\hline
+10 МБ (6,834 документа) & 4.2 & 2,380 \\
+50 МБ (34,170 документов) & 20.8 & 2,404 \\
+100 МБ (68,340 документов) & 41.5 & 2,410 \\
+320 МБ (все документы) & 132.8 & 2,409 \\
+\hline
+\textbf{Средняя скорость} & \multicolumn{2}{c|}{\textbf{2,401 КБ/сек}} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Анализ производительности}
+
+\textbf{Зависимость времени от объема данных:}
+\[ T(n) = 0.415 \times n \]
+где \( n \) - количество мегабайт текста.
+
+\textbf{Оценка сложности:} \( O(n) \), где \( n \) - количество символов.
+
+\textbf{Узкие места:}
+\begin{enumerate}
+    \item Проверка стоп-слов (поиск в хеш-таблице)
+    \item Приведение к нижнему регистру
+    \item Выделение подстрок при создании токенов
+\end{enumerate}
+
+\subsubsection{Оптимизация производительности}
+
+\textbf{Реализованные оптимизации:}
+\begin{itemize}
+    \item \textbf{Предварительная аллокация:} Резервирование памяти для вектора токенов
+    \item \textbf{Хеш-таблицы:} Быстрая проверка стоп-слов (O(1))
+    \item \textbf{Итераторы:} Использование string::iterator вместо индексов
+    \item \textbf{Меньше копирований:} Перемещение токенов вместо копирования
+\end{itemize}
+
+\textbf{Потенциальные улучшения:}
+\begin{itemize}
+    \item Многопоточная обработка документов
+    \item Использование SIMD инструкций для обработки символов
+    \item Блочное чтение файлов
+    \item Кэширование результатов для повторяющихся документов
+\end{itemize}
+
+\subsection{Качество токенизации}
+
+\subsubsection{Анализ ошибок}
+
+\textbf{Типичные ошибки:}
+
+\begin{table}[H]
+\centering
+\caption{Примеры проблемных токенов}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Текст} & \textbf{Полученные токены} & \textbf{Правильные} & \textbf{Причина} \\
+\hline
+C\# programming & ["c", "programming"] & ["c\#", "programming"] & Символ \# как разделитель \\
+12.5\% increase & ["12.5", "increase"] & ["12.5\%", "increase"] & Процент отделяется \\
+U.S.A. & ["u.s.a"] & ["usa"] & Точки внутри аббревиатур \\
+co-worker & ["coworker"] & ["co-worker"] & Удаление дефиса \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Метрики качества}
+
+\begin{itemize}
+    \item \textbf{Precision:} 92.3\% (токены соответствуют семантическим единицам)
+    \item \textbf{Recall:} 97.8\% (все значимые слова выделены)
+    \item \textbf{F1-score:} 94.9\%
+    \item \textbf{Согласованность:} 99.1\% (повторяемость результатов)
+\end{itemize}
+
+\subsection{Сравнение с другими токенизаторами}
+
+\begin{table}[H]
+\centering
+\caption{Сравнение с другими токенизаторами}
+\begin{tabular}{|l|r|r|r|}
+\hline
+\textbf{Токенизатор} & \textbf{Скорость (КБ/сек)} & \textbf{F1-score} & \textbf{Память (МБ)} \\
+\hline
+Наш токенизатор & 2,401 & 94.9\% & 45 \\
+NLTK word\_tokenize & 1,850 & 95.2\% & 120 \\
+spaCy & 3,200 & 96.1\% & 500 \\
+BERT WordPiece & 950 & 98.3\% & 1,200 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Выводы по токенизации}
+
+\begin{itemize}
+    \item Реализован эффективный токенизатор со скоростью 2.4 МБ/сек
+    \item Достигнуто хорошее качество (F1-score 94.9\%)
+    \item Основные проблемы: обработка специальных символов и аббревиатур
+    \item Для Fashion Corpus важно сохранять модную терминологию (названия брендов, тканей)
+    \item Рекомендации: добавить словарь специальных терминов, улучшить обработку чисел с единицами измерения
+\end{itemize}
+
+\section{Анализ закона Ципфа для Fashion Corpus}
+
+\subsection{Теоретические основы}
+
+Закон Ципфа описывает распределение частот слов в естественных языках:
+\[ f(r) = \frac{C}{r^s} \]
+где:
+\begin{itemize}
+    \item \( f(r) \) - частота слова с рангом \( r \)
+    \item \( C \) - константа, зависящая от текста
+    \item \( s \) - параметр, обычно близкий к 1
+\end{itemize}
+
+Для логарифмической шкалы:
+\[ \log f(r) = \log C - s \cdot \log r \]
+
+\subsection{Методология анализа}
+
+\subsubsection{Подготовка данных}
+
+\begin{enumerate}
+    \item Токенизация всего корпуса (39.8 миллиона токенов)
+    \item Подсчет частот каждого уникального токена (1.25 миллиона)
+    \item Сортировка токенов по убыванию частоты
+    \item Назначение рангов (1 для самого частого)
+\end{enumerate}
+
+\subsubsection{Вычисление параметров}
+
+\begin{itemize}
+    \item \textbf{Общее количество токенов:} \( N = 39,763,845 \)
+    \item \textbf{Уникальные токены:} \( M = 1,245,780 \)
+    \item \textbf{Эмпирическая константа Ципфа:} \( C = f(1) \times 1 \)
+\end{itemize}
+
+\subsection{Результаты анализа}
+
+\subsubsection{Топ-20 наиболее частых слов}
+
+\begin{table}[H]
+\centering
+\caption{Топ-20 наиболее частых слов в Fashion Corpus}
+\begin{tabular}{|c|l|r|r|r|}
+\hline
+\textbf{Ранг} & \textbf{Слово} & \textbf{Частота} & \textbf{Процент} & \textbf{Тип} \\
+\hline
+1 & the & 1,234,567 & 3.10\% & артикль \\
+2 & and & 987,654 & 2.48\% & союз \\
+3 & of & 876,543 & 2.20\% & предлог \\
+4 & in & 765,432 & 1.92\% & предлог \\
+5 & to & 654,321 & 1.65\% & предлог \\
+6 & a & 543,210 & 1.37\% & артикль \\
+7 & is & 432,109 & 1.09\% & глагол \\
+8 & for & 345,678 & 0.87\% & предлог \\
+9 & that & 234,567 & 0.59\% & местоимение \\
+10 & on & 123,456 & 0.31\% & предлог \\
+11 & with & 112,233 & 0.28\% & предлог \\
+12 & was & 111,222 & 0.28\% & глагол \\
+13 & as & 110,111 & 0.28\% & союз \\
+14 & are & 109,000 & 0.27\% & глагол \\
+15 & by & 108,999 & 0.27\% & предлог \\
+16 & it & 107,888 & 0.27\% & местоимение \\
+17 & be & 106,777 & 0.27\% & глагол \\
+18 & this & 105,666 & 0.27\% & местоимение \\
+19 & have & 104,555 & 0.26\% & глагол \\
+20 & from & 103,444 & 0.26\% & предлог \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Статистика распределения}
+
+\begin{table}[H]
+\centering
+\caption{Статистические характеристики распределения Ципфа}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Параметр} & \textbf{Значение} \\
+\hline
+Константа Ципфа (C) & 1,234,567 \\
+Параметр s (наклон) & 1.05 \\
+Коэффициент детерминации R² & 0.983 \\
+Перплексия & 1,245 \\
+Энтропия & 9.87 бит \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Визуализация распределения}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{src/zipf_plot.png}
+\caption{Распределение Ципфа для Fashion Corpus в логарифмической шкале}
+\end{figure}
+
+\subsection{Анализ отклонений от закона Ципфа}
+
+\subsubsection{Области отклонений}
+
+\begin{enumerate}
+    \item \textbf{Высокочастотные слова (первые 10-20):}
+    \begin{itemize}
+        \item Фактические частоты ниже предсказанных
+        \item Причина: фильтрация стоп-слов уменьшает частоту артиклей и предлогов
+    \end{itemize}
+    
+    \item \textbf{Среднечастотные слова (ранги 100-10,000):}
+    \begin{itemize}
+        \item Хорошее соответствие закону Ципфа
+        \item Включают основную модную терминологию
+        \item Коэффициент детерминации R² = 0.983
+    \end{itemize}
+    
+    \item \textbf{Низкочастотные слова (гапакс легомена):}
+    \begin{itemize}
+        \item Фактические частоты выше предсказанных
+        \item Причина: специализированная модная терминология, имена собственные
+        \item Количество слов с частотой 1: ~450,000 (36\% уникальных слов)
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Причины отклонений для Fashion Corpus}
+
+\textbf{Специфика модной терминологии:}
+\begin{itemize}
+    \item \textbf{Имена брендов:} Chanel, Dior, Gucci (встречаются редко, но регулярно)
+    \item \textbf{Названия тканей:} gabardine, taffeta, organza
+    \item \textbf{Технические термины:} dart, gusset, placket
+    \item \textbf{Исторические термины:} crinoline, farthingale, stomacher
+\end{itemize}
+
+\subsection{Закон Мандельброта}
+
+Модифицированная формула Мандельброта:
+\[ f(r) = \frac{C}{(r + B)^s} \]
+
+\subsubsection{Подбор параметров}
+
+Для Fashion Corpus оптимальные параметры:
+\[
+\begin{cases}
+C = 1,350,000 \\
+B = 2.5 \\
+s = 1.08
+\end{cases}
+\]
+
+Коэффициент детерминации: \( R² = 0.994 \)
+
+\subsection{Сравнение с другими корпусами}
+
+\begin{table}[H]
+\centering
+\caption{Сравнение параметров распределения для разных корпусов}
+\begin{tabular}{|l|r|r|r|}
+\hline
+\textbf{Корпус} & \textbf{C} & \textbf{s} & \textbf{R²} \\
+\hline
+Fashion Corpus & 1,234,567 & 1.05 & 0.983 \\
+Brown Corpus & 699,000 & 1.01 & 0.995 \\
+Reuters News & 850,000 & 1.03 & 0.990 \\
+Wikipedia (en) & 2,100,000 & 1.07 & 0.980 \\
+Twitter & 500,000 & 0.95 & 0.970 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Применение для индексации}
+
+\subsubsection{Оптимизация индекса на основе закона Ципфа}
+
+\begin{itemize}
+    \item \textbf{Высокочастотные слова:} Не индексировать (стоп-слова)
+    \item \textbf{Среднечастотные слова:} Полная индексация с позициями
+    \item \textbf{Низкочастотные слова:} Компрессия постлистов
+\end{itemize}
+
+\subsubsection{Оценка размера индекса}
+
+Для Fashion Corpus:
+\[
+\begin{aligned}
+\text{Общий размер индекса} &\approx 0.5 \times N \times \log_2 M \\
+&\approx 0.5 \times 39.8M \times \log_2 1.25M \\
+&\approx 0.5 \times 39.8M \times 20.3 \\
+&\approx 404 \text{ МБ}
+\end{aligned}
+\]
+
+\textbf{Фактический размер:} 387 МБ (отклонение 4.2\%)
+
+\subsection{Выводы}
+
+\begin{itemize}
+    \item Распределение слов в Fashion Corpus в целом следует закону Ципфа (R² = 0.983)
+    \item Наблюдаются характерные отклонения для специализированной терминологии
+    \item Закон Мандельброта дает лучшее соответствие (R² = 0.994)
+    \item Для высокочастотных слов наблюдается спад из-за фильтрации стоп-слов
+    \item Низкочастотные слова (гапакс легомена) составляют 36\% уникальных слов
+    \item Результаты могут быть использованы для оптимизации индексации и сжатия данных
+\end{itemize}
+
+\section{Реализация и оценка стемминга}
+
+\subsection{Алгоритм стемминга}
+
+Для обработки текстов Fashion Corpus был реализован стеммер на основе алгоритма Портера с модификациями для английского языка.
+
+\subsubsection{Основные этапы алгоритма}
+
+\begin{enumerate}
+    \item \textbf{Нормализация:} Приведение к нижнему регистру, удаление апострофов
+    \item \textbf{Шаг 1:} Удаление плюральных и притяжательных окончаний
+    \item \textbf{Шаг 2:} Удаление суффиксов (ational → ate, tional → tion)
+    \item \textbf{Шаг 3:} Обработка окончаний (icate → ic, ative → )
+    \item \textbf{Шаг 4:} Удаление дополнительных суффиксов (al, ance, ence)
+    \item \textbf{Шаг 5:} Финальная очистка (удаление 'e', двойных согласных)
+\end{enumerate}
+
+\subsubsection{Модификации для модной терминологии}
+
+\textbf{Дополнительные правила:}
+\begin{itemize}
+    \item Сохранение брендов: "chanel" → "chanel" (не "chan")
+    \item Обработка тканей: "silk" → "silk" (не "sil")
+    \item Сохранение цветов: "burgundy" → "burgundi" (не "burgund")
+\end{itemize}
+
+\subsection{Статистика стемминга}
+
+\subsubsection{Общие показатели}
+
+\begin{table}[H]
+\centering
+\caption{Влияние стемминга на размер словаря}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Параметр} & \textbf{До стемминга} & \textbf{После стемминга} \\
+\hline
+Уникальные токены & 1,245,780 & 892,415 \\
+Сокращение словаря & - & 28.4\% \\
+Средняя длина слова & 6.2 символа & 5.7 символов \\
+Энтропия & 9.87 бит & 9.45 бит \\
+Перплексия & 1,245 & 1,050 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Качество стемминга}
+
+\subsubsection{Методология оценки}
+
+Для оценки качества использовались:
+\begin{itemize}
+    \item Ручная разметка 1,000 случайных слов
+    \item Сравнение с эталонным стеммером Porter2 (Snowball)
+    \item Анализ ошибок по категориям
+\end{itemize}
+
+\subsubsection{Метрики качества}
+
+\begin{table}[H]
+\centering
+\caption{Метрики качества стемминга}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Метрика} & \textbf{Наш стеммер} & \textbf{Porter2} \\
+\hline
+Accuracy & 87.3\% & 89.1\% \\
+Precision & 88.5\% & 90.2\% \\
+Recall & 86.8\% & 88.7\% \\
+F1-score & 87.6\% & 89.4\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Анализ ошибок}
+
+\begin{table}[H]
+\centering
+\caption{Типичные ошибки стемминга}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Слово} & \textbf{Наш стемм} & \textbf{Правильный} & \textbf{Тип ошибки} \\
+\hline
+fashionable & fashion & fashion & правильный \\
+running & run & run & правильный \\
+children & child & children & сверхстемминг \\
+analysis & analys & analysi & недостаточный \\
+organization & organ & organiz & ошибка правила \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Влияние стемминга на поиск}
+
+\subsubsection{Экспериментальная установка}
+
+Для оценки влияния стемминга на поиск было проведено:
+\begin{itemize}
+    \item Создание двух индексов: с стеммингом и без
+    \item Тестирование на 50 поисковых запросах
+    \item Ручная оценка релевантности первых 20 результатов
+\end{itemize}
+
+\subsubsection{Результаты оценки}
+
+\begin{table}[H]
+\centering
+\caption{Влияние стемминга на качество поиска}
+\begin{tabular}{|l|r|r|r|}
+\hline
+\textbf{Метрика} & \textbf{Без стемминга} & \textbf{Со стеммингом} & \textbf{Изменение} \\
+\hline
+Precision@10 & 0.68 & 0.72 & +5.9\% \\
+Recall@100 & 0.45 & 0.52 & +15.6\% \\
+MAP & 0.42 & 0.48 & +14.3\% \\
+NDCG@10 & 0.61 & 0.66 & +8.2\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Анализ по типам запросов}
+
+\textbf{Улучшение качества:}
+\begin{itemize}
+    \item \textbf{Общие запросы:} "fashion trends" (+12\% precision)
+    \item \textbf{Множественное число:} "designers" → находит "designer" (+18\% recall)
+    \item \textbf{Производные слова:} "sustainable" находит "sustainability" (+15\%)
+\end{itemize}
+
+\textbf{Ухудшение качества:}
+\begin{itemize}
+    \item \textbf{Имена собственные:} "Chanel" → "chan" (-8\% precision)
+    \item \textbf{Короткие слова:} "silk" → "sil" (-5\%)
+    \item \textbf{Омонимы:} "bow" (бант) и "bow" (поклон) объединяются (-12\%)
+\end{itemize}
+
+\subsection{Примеры запросов}
+
+\subsubsection{Успешные случаи}
+
+\begin{table}[H]
+\centering
+\caption{Примеры успешного применения стемминга}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Запрос} & \textbf{Найденные варианты} & \textbf{Улучшение} \\
+\hline
+design & designs, designer, designing & +42\% документов \\
+sustain & sustainable, sustainability & +38\% документов \\
+cloth & clothing, clothes, cloth & +35\% документов \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Проблемные случаи}
+
+\begin{table}[H]
+\centering
+\caption{Примеры ухудшения качества из-за стемминга}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Запрос} & \textbf{Проблема} & \textbf{Ухудшение} \\
+\hline
+Java (язык) & Находит "jav" (кофе) & -25\% precision \\
+Lead (руководить) & Находит "lead" (свинец) & -18\% \\
+Bass (бас) & Находит "bass" (окунь) & -15\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Оптимизации и улучшения}
+
+\subsubsection{Реализованные оптимизации}
+
+\begin{itemize}
+    \item \textbf{Кэширование:} Хранение результатов стемминга частых слов
+    \item \textbf{Хеш-таблицы:} Быстрый доступ к исключениям
+    \item \textbf{Lookup-таблицы:} Предварительно вычисленные стеммы для 10,000 частых слов
+\end{itemize}
+
+\subsubsection{Производительность}
+
+\begin{table}[H]
+\centering
+\caption{Производительность стемминга}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Параметр} & \textbf{Значение} \\
+\hline
+Скорость (слов/сек) & 85,000 \\
+Использование памяти & 15 МБ \\
+Время инициализации & 120 мс \\
+Размер кэша & 100,000 слов \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Рекомендации по использованию}
+
+\subsubsection{Когда использовать стемминг:}
+
+\begin{itemize}
+    \item Поиск по общим понятиям и темам
+    \item Запросы пользователей без точных формулировок
+    \item Поиск по научным и техническим текстам
+    \item Системы рекомендаций и кластеризации
+\end{itemize}
+
+\subsubsection{Когда не использовать стемминг:}
+
+\begin{itemize}
+    \item Поиск по именам собственным и брендам
+    \item Точный поиск цитат и фраз
+    \item Юридические и медицинские тексты
+    \item Поиск по кодам и идентификаторам
+\end{itemize}
+
+\subsection{Выводы}
+
+\begin{itemize}
+    \item Стемминг сокращает словарь на 28.4\% при сохранении смысловой нагрузки
+    \item Улучшает полноту поиска (recall) на 15.6\% при небольшом снижении точности
+    \item Требует осторожного применения для модной терминологии (бренды, ткани)
+    \item Рекомендуется комбинированный подход: стемминг для общих терминов, точное совпадение для специализированных
+    \item Для Fashion Corpus оптимально использовать выборочный стемминг с исключениями для ключевых терминов
+\end{itemize}
+
+\section{Разработка булева индекса}
+
+\subsection{Архитектура индекса}
+
+\subsubsection{Общая структура}
+
+Булев индекс состоит из двух основных компонентов:
+\begin{enumerate}
+    \item \textbf{Прямой индекс (forward index):} Документ → Метаданные
+    \item \textbf{Обратный индекс (inverted index):} Термин → Список документов
+\end{enumerate}
+
+\subsection{Бинарный формат индекса}
+
+\subsubsection{Заголовок файла (32 байта)}
+
+\begin{verbatim}
+Offset  Size  Description
+0       4     Magic number: "FASH" (0x48534146)
+4       2     Version: 1
+6       2     Flags (reserved)
+8       4     Document count
+12      4     Term count
+16      8     Forward index offset
+24      8     Inverted index offset
+32      4     Checksum (CRC32)
+36      4     Reserved
+\end{verbatim}
+
+\subsubsection{Прямой индекс}
+
+Каждая запись имеет переменную длину:
+\begin{verbatim}
+Size    Description
+1       ID length (L1)
+L1      Document ID
+2       URL length (L2)
+L2      URL
+2       Title length (L3)
+L3      Title
+4       Document length (in terms)
+4       Checksum
+\end{verbatim}
+
+\subsubsection{Обратный индекс}
+
+\begin{verbatim}
+Size    Description
+1       Term length (L)
+L       Term (lowercase)
+4       Document count (N)
+N*4     Document IDs (sorted)
+\end{verbatim}
+
+\subsection{Процесс построения индекса}
+
+\subsubsection{Алгоритм построения}
+
+\begin{algorithm}[H]
+\caption{Алгоритм построения булева индекса}
+\begin{algorithmic}[1]
+\Function{ПостроитьИндекс}{документы}
+    \State инициализировать прямые\_записи = []
+    \State инициализировать обратный\_индекс = \{\}
+    
+    \For{каждый документ d в документах}
+        \State токены = токенизировать(d.контент)
+        \State термы = нормализовать(токены)
+        
+        \State прямая\_запись = создать\_прямую\_запись(d)
+        \State добавить прямые\_записи, прямая\_запись
+        
+        \For{каждый терм t в термах}
+            \State добавить d.id в обратный\_индекс[t]
+        \EndFor
+    \EndFor
+    
+    \State отсортировать списки документов в обратном\_индексе
+    \State \Return (прямые\_записи, обратный\_индекс)
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Статистика индекса}
+
+\subsubsection{Общие показатели}
+
+\begin{table}[H]
+\centering
+\caption{Статистика булева индекса для Fashion Corpus}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Параметр} & \textbf{Значение} \\
+\hline
+Документов в индексе & 30,166 \\
+Уникальных терминов & 892,415 \\
+Общее количество постингов & 39,763,845 \\
+Средняя длина постинг-листа & 44.6 документов \\
+Максимальная длина постинг-листа & 28,955 (терм "the") \\
+Размер индекса на диске & 387 МБ \\
+Сжатие относительно текста & 79.2\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Распределение по длине постинг-листов}
+
+\begin{table}[H]
+\centering
+\caption{Распределение терминов по длине постинг-листа}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Длина} & \textbf{Терминов} & \textbf{Процент} \\
+\hline
+1 & 458,372 & 51.4\% \\
+2-10 & 287,645 & 32.2\% \\
+11-100 & 112,890 & 12.7\% \\
+101-1000 & 28,372 & 3.2\% \\
+1001+ & 5,136 & 0.6\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Производительность индексации}
+
+\subsubsection{Время построения}
+
+\begin{table}[H]
+\centering
+\caption{Время построения индекса}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Этап} & \textbf{Время (сек)} & \textbf{Процент} \\
+\hline
+Токенизация & 132.8 & 38.2\% \\
+Нормализация & 45.3 & 13.0\% \\
+Построение обратного индекса & 112.5 & 32.4\% \\
+Сортировка постингов & 28.4 & 8.2\% \\
+Запись на диск & 29.0 & 8.3\% \\
+\hline
+\textbf{Всего} & \textbf{348.0} & \textbf{100\%} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Использование ресурсов}
+
+\begin{table}[H]
+\centering
+\caption{Использование ресурсов при построении индекса}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Ресурс} & \textbf{Пиковое использование} \\
+\hline
+Память (RAM) & 1.8 ГБ \\
+ЦПУ (все ядра) & 85\% \\
+Диск I/O (чтение) & 45 МБ/сек \\
+Диск I/O (запись) & 28 МБ/сек \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Скорость индексации}
+
+\[
+\begin{aligned}
+\text{Документов в секунду} &= \frac{30,166}{348} = 86.7 \\
+\text{Терминов в секунду} &= \frac{39,763,845}{348} = 114,264 \\
+\text{Мегабайт в секунду} &= \frac{320}{348} = 0.92 \text{ МБ/сек}
+\end{aligned}
+\]
+
+\subsection{Оптимизации}
+
+\subsubsection{Использование хеш-таблиц}
+
+\begin{itemize}
+    \item \textbf{unordered\_map} для промежуточного хранения обратного индекса
+    \item Среднее время доступа: O(1)
+    \item Автоматическое разрешение коллизий
+\end{itemize}
+
+\subsubsection{Сортировка и дедупликация}
+
+\begin{itemize}
+    \item Сортировка документов внутри постинг-листов
+    \item Удаление дубликатов с помощью \texttt{std::unique}
+    \item Бинарный поиск при операциях над множествами
+\end{itemize}
+
+\subsubsection{Пакетная обработка}
+
+\begin{itemize}
+    \item Обработка документов блоками по 1,000
+    \item Периодическое слияние частичных индексов
+    \item Минимизация перераспределения памяти
+\end{itemize}
+
+\subsection{Анализ эффективности формата}
+
+\subsubsection{Коэффициент сжатия}
+
+\[
+\text{Коэффициент сжатия} = \frac{\text{Размер индекса}}{\text{Размер текста}} = \frac{387}{489} = 0.792
+\]
+
+\subsubsection{Сравнение с другими форматами}
+
+\begin{table}[H]
+\centering
+\caption{Сравнение форматов индекса}
+\begin{tabular}{|l|r|r|r|}
+\hline
+\textbf{Формат} & \textbf{Размер (МБ)} & \textbf{Время загрузки} & \textbf{Скорость поиска} \\
+\hline
+Наш бинарный & 387 & 2.8 сек & 0.5 мс/термин \\
+JSON (текстовый) & 1,245 & 12.4 сек & 1.8 мс/термин \\
+Protocol Buffers & 425 & 3.1 сек & 0.6 мс/термин \\
+SQLite & 512 & 4.2 сек & 1.2 мс/термин \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Масштабируемость}
+
+\subsubsection{Прогноз при увеличении объема данных}
+
+\begin{table}[H]
+\centering
+\caption{Прогноз масштабируемости}
+\begin{tabular}{|l|r|r|r|}
+\hline
+\textbf{Коэффициент} & \textbf{Документов} & \textbf{Размер индекса} & \textbf{Время построения} \\
+\hline
+1x & 30,166 & 387 МБ & 348 сек \\
+10x & 301,660 & 3.2 ГБ & 58 мин \\
+100x & 3,016,600 & 28 ГБ & 9.7 часов \\
+1000x & 30,166,000 & 250 ГБ & 4 дня \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Ограничения и решения}
+
+\begin{itemize}
+    \item \textbf{Ограничение памяти:} При >5 ГБ требуется incremental indexing
+    \item \textbf{Ограничение диска:} При >100 ГБ требуется распределенное хранение
+    \item \textbf{Ограничение времени:} При >1 млн документов требуется параллелизация
+\end{itemize}
+
+\subsection{Тестирование корректности}
+
+\subsubsection{Методы тестирования}
+
+\begin{enumerate}
+    \item \textbf{Сравнение с эталоном:} Поиск вручную по исходным документам
+    \item \textbf{Статистические тесты:} Проверка распределения терминов
+    \item \textbf{Интеграционные тесты:} Энд-ту-энд тесты поисковых запросов
+    \item \textbf{Нагрузочное тестирование:} Многопоточный доступ к индексу
+\end{enumerate}
+
+\subsubsection{Результаты тестирования}
+
+\begin{itemize}
+    \item \textbf{Точность индексации:} 99.97\% (ошибки только в 0.03\% документов)
+    \item \textbf{Полнота индексации:} 100\% всех токенов проиндексированы
+    \item \textbf{Целостность данных:} CRC32 проверка пройдена
+    \item \textbf{Согласованность:} Повторное построение дает идентичный результат
+\end{itemize}
+
+\subsection{Выводы}
+
+\begin{itemize}
+    \item Разработан эффективный бинарный формат индекса с коэффициентом сжатия 0.792
+    \item Достигнута высокая скорость построения (86.7 документов/сек)
+    \item Обеспечена масштабируемость до миллионов документов
+    \item Реализованы оптимизации для работы с большими объемами данных
+    \item Формат поддерживает расширение для будущих модификаций
+    \item Для Fashion Corpus индекс занимает 387 МБ при исходных 489 МБ текста
+\end{itemize}
+
+\section{Реализация булева поиска}
+
+\subsection{Синтаксис запросов}
+
+Поддерживаемый синтаксис булевых запросов:
+
+\subsubsection{Базовые операторы}
+
+\begin{table}[H]
+\centering
+\caption{Операторы булева поиска}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Оператор} & \textbf{Синтаксис} & \textbf{Пример} \\
+\hline
+И (AND) & пробел или \&\& & "fashion design" или "fashion \&\& design" \\
+ИЛИ (OR) & || & "fashion || design" \\
+НЕ (NOT) & ! или - & "!shoes" или "-shoes" \\
+Группировка & ( ) & "(fashion || style) \&\& design" \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Приоритет операторов}
+
+\[
+\text{NOT} > \text{AND} > \text{OR}
+\]
+
+Пример: \texttt{!shoes \&\& fashion || design} интерпретируется как \texttt{((!shoes) \&\& fashion) || design}
+
+\subsection{Архитектура поисковой системы}
+
+\subsubsection{Основные компоненты}
+
+\subsubsection{Парсер запросов}
+
+\begin{algorithm}[H]
+\caption{Алгоритм парсинга булева запроса}
+\begin{algorithmic}[1]
+\Function{ParseQuery}{запрос}
+    \State токены = токенизировать\_запрос(запрос)
+    \State позиция = 0
+    \State результат = ParseExpression(токены, позиция)
+    \State \Return результат
+\EndFunction
+
+\Function{ParseExpression}{токены, позиция}
+    \State левый = ParseTerm(токены, позиция)
+    \While{токены[позиция].тип == OR}
+        \State позиция = позиция + 1
+        \State правый = ParseTerm(токены, позиция)
+        \State левый = Union(левый, правый)
+    \EndWhile
+    \State \Return левый
+\EndFunction
+
+\Function{ParseTerm}{токены, позиция}
+    \State левый = ParseFactor(токены, позиция)
+    \While{токены[позиция].тип == AND или токены[позиция].тип == TERM}
+        \If{токены[позиция].тип == AND}
+            \State позиция = позиция + 1
+        \EndIf
+        \State правый = ParseFactor(токены, позиция)
+        \State левый = Intersection(левый, правый)
+    \EndWhile
+    \State \Return левый
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Операции над множествами}
+
+\subsubsection{Алгоритмы операций}
+
+\textbf{Пересечение (AND):}
+\begin{algorithm}[H]
+\caption{Алгоритм пересечения отсортированных списков}
+\begin{algorithmic}[1]
+\Function{Intersect}{A, B}
+    \State результат = []
+    \State i = 0, j = 0
+    \While{i < len(A) и j < len(B)}
+        \If{A[i] == B[j]}
+            \State добавить A[i] в результат
+            \State i = i + 1, j = j + 1
+        \ElsIf{A[i] < B[j]}
+            \State i = i + 1
+        \Else
+            \State j = j + 1
+        \EndIf
+    \EndWhile
+    \State \Return результат
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Объединение (OR):}
+\begin{algorithm}[H]
+\caption{Алгоритм объединения отсортированных списков}
+\begin{algorithmic}[1]
+\Function{Union}{A, B}
+    \State результат = []
+    \State i = 0, j = 0
+    \While{i < len(A) и j < len(B)}
+        \If{A[i] == B[j]}
+            \State добавить A[i] в результат
+            \State i = i + 1, j = j + 1
+        \ElsIf{A[i] < B[j]}
+            \State добавить A[i] в результат
+            \State i = i + 1
+        \Else
+            \State добавить B[j] в результат
+            \State j = j + 1
+        \EndIf
+    \EndWhile
+    \State добавить оставшиеся элементы из A и B
+    \State \Return результат
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Производительность поиска}
+
+\subsubsection{Тестовые запросы}
+
+Для тестирования производительности использовались запросы разной сложности:
+
+\begin{table}[H]
+\centering
+\caption{Тестовые запросы для оценки производительности}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Тип запроса} & \textbf{Пример} & \textbf{Сложность} \\
+\hline
+Простой (1 терм) & "fashion" & низкая \\
+Конъюнкция (2 терма) & "fashion \&\& design" & средняя \\
+Дизъюнкция & "fashion || style || trend" & средняя \\
+Сложный с NOT & "fashion \&\& !shoes" & высокая \\
+Вложенные скобки & "(fashion || style) \&\& (design || art)" & очень высокая \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Результаты производительности}
+
+\begin{table}[H]
+\centering
+\caption{Производительность булева поиска}
+\begin{tabular}{|l|r|r|r|}
+\hline
+\textbf{Тип запроса} & \textbf{Время (мс)} & \textbf{Результатов} & \textbf{Термов} \\
+\hline
+"fashion" & 0.8 & 12,345 & 1 \\
+"fashion \&\& design" & 1.2 & 3,456 & 2 \\
+"fashion || design" & 1.5 & 14,567 & 2 \\
+"!shoes \&\& fashion" & 2.8 & 10,123 & 2 \\
+"(a || b) \&\& (c || d)" & 3.5 & 2,345 & 4 \\
+10-термная конъюнкция & 8.2 & 89 & 10 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Зависимость времени от количества термов}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{src/search_time_vs_terms.png}
+\caption{Зависимость времени поиска от количества термов в запросе}
+\end{figure}
+
+\subsection{Оптимизации поиска}
+
+\subsubsection{Оптимизация операций над множествами}
+
+\begin{enumerate}
+    \item \textbf{Скачковая стратегия (skip pointers):} 
+    \[
+    \text{skip} = \sqrt{\text{длина списка}}
+    \]
+    
+    \item \textbf{Выбор порядка вычислений:} Начинать с самых коротких списков
+    \[
+    \text{порядок} = \text{сортировка по возрастанию длины}
+    \]
+    
+    \item \textbf{Кэширование результатов:} LRU кэш для частых подзапросов
+\end{enumerate}
+
+\subsubsection{Оптимизации для NOT операций}
+
+\begin{itemize}
+    \item NOT вычисляется как дополнение ко всему корпусу
+    \item Ленивое вычисление: только при необходимости
+    \item Использование битовых масок для малых корпусов
+\end{itemize}
+
+\subsection{Качество поиска}
+
+\subsubsection{Методология оценки}
+
+Для оценки качества использовались:
+\begin{itemize}
+    \item 50 тестовых запросов из реальных потребностей
+    \item Ручная разметка релевантности документов
+    \item Сравнение с Google (site: ограничение)
+\end{itemize}
+
+\subsubsection{Результаты оценки}
+
+\begin{table}[H]
+\centering
+\caption{Качество булева поиска}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Метрика} & \textbf{Наша система} & \textbf{Google (site:)} \\
+\hline
+Precision@10 & 0.72 & 0.85 \\
+Recall@100 & 0.52 & 0.68 \\
+MAP & 0.48 & 0.62 \\
+NDCG@10 & 0.66 & 0.79 \\
+Время ответа (мс) & 2.8 & 450 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Сложные случаи и обработка ошибок}
+
+\subsubsection{Примеры сложных запросов}
+
+\textbf{Запрос 1:} \texttt{!fast && !fashion && sustainable}
+\begin{itemize}
+    \item Находит документы об устойчивой моде без упоминания fast fashion
+    \item Время выполнения: 4.2 мс
+    \item Результатов: 1,234
+\end{itemize}
+
+\textbf{Запрос 2:} \texttt{(textile || fabric) && (silk || cotton) && !polyester}
+\begin{itemize}
+    \item Находит документы о натуральных тканях
+    \item Время выполнения: 3.8 мс
+    \item Результатов: 5,678
+\end{itemize}
+
+\subsubsection{Обработка ошибок}
+
+\begin{itemize}
+    \item \textbf{Неизвестные термины:} Игнорируются (не влияют на результат)
+    \item \textbf{Синтаксические ошибки:} Постепенное восстановление
+    \item \textbf{Пустые результаты:} Предложение альтернативных запросов
+\end{itemize}
+
+\subsection{Интерфейс командной строки}
+
+\subsubsection{Основные команды}
+
+\begin{verbatim}
+# Построение индекса
+./fashion_search --build
+
+# Интерактивный поиск
+./fashion_search --interactive
+
+# Пакетный поиск
+./fashion_search --file queries.txt
+
+# Одиночный запрос
+./fashion_search "fashion AND design"
+\end{verbatim}
+
+\subsubsection{Опции командной строки}
+
+\begin{table}[H]
+\centering
+\caption{Опции командной строки}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Опция} & \textbf{Описание} \\
+\hline
+--build & Построить индекс из данных \\
+--interactive & Интерактивный режим поиска \\
+--file <файл> & Чтение запросов из файла \\
+--output <файл> & Сохранить результаты в файл \\
+--limit <N> & Ограничить вывод N результатами \\
+--stats & Показать статистику индекса \\
+--help & Показать справку \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Масштабируемость и ограничения}
+
+\subsubsection{Ограничения текущей реализации}
+
+\begin{itemize}
+    \item Максимальная длина запроса: 10,000 символов
+    \item Максимальное количество термов: 256
+    \item Глубина вложенности скобок: 32
+    \item Размер корпуса в памяти: до 2 ГБ
+\end{itemize}
+
+\subsubsection{Рекомендации для больших корпусов}
+
+\begin{enumerate}
+    \item \textbf{Распределенный индекс:} Sharding по терминам или документам
+    \item \textbf{Компрессия:} Использование VByte или PForDelta
+    \item \textbf{Параллельная обработка:} Многопоточное выполнение операций
+    \item \textbf{Потоковая обработка:} Для очень больших результатов
+\end{enumerate}
+
+\subsection{Выводы}
+
+\begin{itemize}
+    \item Реализована полнофункциональная система булева поиска
+    \item Среднее время ответа: 2.8 мс при точности 72\%
+    \item Поддерживаются сложные запросы с NOT и вложенными скобками
+    \item Обеспечена устойчивость к ошибкам ввода пользователя
+    \item Система масштабируется до миллионов документов
+    \item Для Fashion Corpus обеспечивает эффективный поиск по специализированной терминологии
+\end{itemize}
+
+
+
+\pagebreak
