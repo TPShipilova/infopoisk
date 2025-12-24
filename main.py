@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-Продвинутый поисковый робот с рекурсивным обходом сайтов
-и рекурсивным обходом Википедии с глубиной 3
-"""
 
 import requests
 import time
@@ -24,13 +20,10 @@ import wikipediaapi
 from typing import List, Dict, Optional, Set, Tuple, Deque
 from collections import deque
 
-# Отключаем предупреждения о SSL
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Настройка SSL для старых сертификатов
 ssl._create_default_https_context = ssl._create_unverified_context
 
-# Настройка логирования
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -54,21 +47,17 @@ class AdvancedFashionCrawler:
         self.visited_urls = self.db["visited_urls"]
         self.crawler_state = self.db["crawler_state"]
 
-        # Создание индексов
         self._create_indexes()
 
-        # Файл состояния
         self.state_file = state_file
 
-        # Конфигурация
-        self.crawl_delay = 3.0  # Увеличенная задержка
+        self.crawl_delay = 3.0
         self.max_retries = 5
         self.batch_size = 50
         self.recheck_days = 30
         self.request_timeout = 45
-        self.max_depth = 3  # Максимальная глубина рекурсии
+        self.max_depth = 3
 
-        # Улучшенные заголовки
         self.headers_list = [
             {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -92,7 +81,6 @@ class AdvancedFashionCrawler:
             }
         ]
 
-        # Доступные источники (с запасными вариантами)
         self.source_configs = [
             {
                 'name': 'Vogue',
@@ -164,7 +152,6 @@ class AdvancedFashionCrawler:
             'catwalk', 'fashion show', 'design', 'couturier', 'atelier'
         ]
 
-        # Сессия с улучшенными настройками
         self.session = requests.Session()
         self.session.headers.update(self.headers_list[0])
         self.session.verify = False  # Отключаем проверку SSL для проблемных сайтов
@@ -179,7 +166,6 @@ class AdvancedFashionCrawler:
             extract_format=wikipediaapi.ExtractFormat.WIKI
         )
 
-        # Состояние
         self.crawler_status = {}
         self._load_state()
 
@@ -213,7 +199,7 @@ class AdvancedFashionCrawler:
             logger.error(f"Ошибка сохранения состояния: {e}")
 
     def _update_crawler_state(self, source: str, status: Dict):
-        """Обновляет состояние краулера."""
+        """Обновляет состояние робота."""
         self.crawler_status[source] = {
             **status,
             'last_updated': datetime.now()
@@ -228,7 +214,6 @@ class AdvancedFashionCrawler:
 
         for attempt in range(self.max_retries):
             try:
-                # Ротация User-Agent
                 headers = random.choice(self.headers_list)
                 self.session.headers.update(headers)
 
@@ -239,12 +224,11 @@ class AdvancedFashionCrawler:
                 else:
                     raise ValueError(f"Неизвестный метод: {method}")
 
-                # Проверяем статус
                 if response.status_code == 200:
                     return response
                 elif response.status_code in [403, 429]:
                     logger.warning(f"Доступ запрещен для {url}, статус: {response.status_code}")
-                    time.sleep(30)  # Долгая пауза при блокировке
+                    time.sleep(30)
                     continue
                 else:
                     logger.warning(f"Неудачный статус для {url}: {response.status_code}")
@@ -259,7 +243,6 @@ class AdvancedFashionCrawler:
                 logger.warning(f"Ошибка запроса для {url} (попытка {attempt + 1}): {e}")
                 time.sleep(5)
 
-            # Экспоненциальная задержка
             sleep_time = min(60, (2 ** attempt) + random.random() * 5)
             time.sleep(sleep_time)
 
@@ -271,18 +254,16 @@ class AdvancedFashionCrawler:
         try:
             parsed = urlparse(url)
 
-            # Если URL относительный
             if not parsed.netloc:
                 parsed = urlparse(urljoin(f"https://{base_domain}", url))
 
-            # Удаляем фрагменты и параметры сортировки
             clean_url = urlunparse((
                 parsed.scheme or 'https',
                 parsed.netloc,
                 parsed.path.rstrip('/'),
-                '',  # params
-                '',  # query - удаляем параметры
-                ''  # fragment
+                '',
+                '',
+                ''
             ))
 
             return clean_url
@@ -295,20 +276,17 @@ class AdvancedFashionCrawler:
         try:
             parsed = urlparse(url)
 
-            # Проверяем домен
             if not parsed.netloc:
-                return True  # Относительные URL допустимы
+                return True
 
             if base_domain not in parsed.netloc:
                 return False
 
-            # Проверяем расширения файлов
             invalid_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.pdf',
                                   '.zip', '.mp4', '.mp3', '.css', '.js']
             if any(parsed.path.lower().endswith(ext) for ext in invalid_extensions):
                 return False
 
-            # Проверяем протокол
             if parsed.scheme not in ['http', 'https']:
                 return False
 
@@ -321,11 +299,9 @@ class AdvancedFashionCrawler:
         """Проверяет, является ли URL статьей."""
         url_lower = url.lower()
 
-        # Проверяем паттерны статей
         if any(pattern in url_lower for pattern in article_patterns):
             return True
 
-        # Проверяем общие паттерны статей
         article_indicators = ['/article/', '/story/', '/news/', '/blog/', '/post/',
                               '/fashion/', '/style/', '/trends/', '/collection/',
                               '/runway/', '/designer/', '/couture/', '/lookbook/']
@@ -343,7 +319,6 @@ class AdvancedFashionCrawler:
             if not href or href.startswith('#'):
                 continue
 
-            # Преобразуем относительный URL в абсолютный
             try:
                 absolute_url = urljoin(base_url, href)
                 normalized_url = self._normalize_url(absolute_url, base_domain)
@@ -354,7 +329,7 @@ class AdvancedFashionCrawler:
                 logger.debug(f"Ошибка обработки ссылки {href}: {e}")
                 continue
 
-        return list(set(links))  # Удаляем дубликаты
+        return list(set(links))
 
     def _extract_content(self, url: str) -> Tuple[Optional[str], Optional[str]]:
         """Извлекает контент статьи (общий метод)."""
@@ -373,7 +348,6 @@ class AdvancedFashionCrawler:
             if not response:
                 return None, None
 
-            # Проверяем тип контента
             content_type = response.headers.get('Content-Type', '').lower()
             if 'text/html' not in content_type:
                 logger.debug(f"Неподдерживаемый тип контента: {content_type}")
@@ -398,7 +372,6 @@ class AdvancedFashionCrawler:
                     if title and len(title) > 10:
                         break
 
-            # Удаляем ненужные элементы
             for tag in soup(['script', 'style', 'iframe', 'nav', 'footer',
                              'aside', 'header', 'form', 'button', '.ad', '.social-share',
                              '.newsletter', '.comments', '.related-posts']):
@@ -470,7 +443,6 @@ class AdvancedFashionCrawler:
                         logger.debug(f"Статья недавно проверялась: {url}")
                         return False
 
-            # Извлекаем контент
             title, content = self._extract_content(url)
             if not content:
                 return False
@@ -556,11 +528,10 @@ class AdvancedFashionCrawler:
         queue = deque()
         articles_found = 0
 
-        # Добавляем стартовые URL
         for url in start_urls:
             queue.append((url, 0))  # (url, depth)
 
-        while queue and articles_found < 1000:  # Ограничиваем количество статей
+        while queue and articles_found < 1000:
             current_url, depth = queue.popleft()
 
             # Пропускаем если уже посещали или слишком глубокая рекурсия
@@ -575,31 +546,25 @@ class AdvancedFashionCrawler:
                 if not response:
                     continue
 
-                # Проверяем, является ли это статьей
                 if self._is_article_url(current_url, article_patterns):
                     if self._process_article(current_url, source_name):
                         articles_found += 1
 
-                # Извлекаем ссылки для дальнейшего сканирования
                 if depth < max_depth:
                     links = self._extract_links(response.text, current_url, base_domain)
 
                     for link in links:
                         if link not in visited:
-                            # Приоритет для статей
                             if self._is_article_url(link, article_patterns):
                                 queue.appendleft((link, depth + 1))
                             else:
                                 queue.append((link, depth + 1))
 
-                # Задержка
                 time.sleep(self.crawl_delay + random.random() * 2)
 
-                # Логирование прогресса
                 if articles_found % 10 == 0:
                     logger.info(f"Найдено {articles_found} статей на {source_name}")
 
-                # Сохраняем состояние каждые 20 статей
                 if articles_found % 20 == 0:
                     self._update_crawler_state(source_name, {
                         'last_url': current_url,
@@ -652,14 +617,12 @@ class AdvancedFashionCrawler:
             logger.info(f"Обработка категории: {category_title} (глубина: {depth})")
 
             try:
-                # Получаем объект категории через API
                 category = self.wiki_api.page(category_title)
 
                 if not category.exists():
                     logger.warning(f"Категория не найдена: {category_title}")
                     return
 
-                # Получаем всех участников категории (статьи и подкатегории)
                 members = category.categorymembers
 
                 for member in members.values():
@@ -673,7 +636,6 @@ class AdvancedFashionCrawler:
                                 articles_found += 1
                                 visited_articles.add(member.pageid)
 
-                                # Логирование прогресса
                                 if articles_found % 10 == 0:
                                     logger.info(f"Найдено {articles_found} статей Википедии")
 
@@ -683,7 +645,6 @@ class AdvancedFashionCrawler:
                           'disambiguation' not in member.title.lower()):
                         crawl_category(member.title, depth + 1)
 
-                    # Корректная задержка для соблюдения правил API
                     time.sleep(0.1)
 
             except Exception as e:
@@ -729,10 +690,8 @@ class AdvancedFashionCrawler:
                 logger.debug(f"Недостаточно терминов моды: {fashion_terms}")
                 return False
 
-            # Вычисляем хэш
             content_hash = hashlib.md5(content.encode('utf-8')).hexdigest()
 
-            # Сохраняем в базу данных
             if existing:
                 update_data = {
                     'title': page.title,
@@ -785,7 +744,6 @@ class AdvancedFashionCrawler:
                 total_articles += articles
                 logger.info(f"Завершено {source_config['name']}: {articles} статей")
 
-                # Пауза между сайтами
                 time.sleep(10)
 
             except KeyboardInterrupt:
@@ -828,11 +786,9 @@ class AdvancedFashionCrawler:
             'generated_at': datetime.now().isoformat()
         }
 
-        # Сохраняем
         with open('corpus_statistics.json', 'w', encoding='utf-8') as f:
             json.dump(total_stats, f, ensure_ascii=False, indent=2)
 
-        # Отчет
         self._print_report(total_stats)
         return total_stats
 
@@ -878,17 +834,14 @@ def main():
     crawler = None
 
     try:
-        # Инициализация
         crawler = AdvancedFashionCrawler()
 
         print("✓ Робот инициализирован")
         print("✓ SSL проверка отключена для проблемных сайтов")
 
-        # Проверка MongoDB
         crawler.client.admin.command('ping')
         print("✓ MongoDB подключена")
 
-        # Меню
         print("\n" + "=" * 60)
         print("Выберите режим:")
         print("1. Рекурсивный обход сайтов (глубина 3)")
