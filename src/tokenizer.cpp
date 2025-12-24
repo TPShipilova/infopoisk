@@ -23,15 +23,11 @@ TokenizationResult Tokenizer::tokenize(const std::string& text) {
                 current_token.clear();
             }
 
-            // Проверяем особые случаи
             if (c == '@') {
-                // Игнорируем email и упоминания
                 skip_until_delimiter(text, i);
             } else if (c == '#') {
-                // Хэштеги - обрабатываем как одно слово
                 handle_hashtag(text, i, result);
             } else if (c == '&') {
-                // HTML entities
                 if (text.substr(i, 4) == "&amp;") {
                     i += 4;
                 } else if (text.substr(i, 5) == "&quot;") {
@@ -72,7 +68,6 @@ bool Tokenizer::is_token_char(char c, const std::string& current_token) {
 }
 
 void Tokenizer::process_token(std::string& token, TokenizationResult& result) {
-    // Применяем фильтры
     if (should_filter_token(token)) {
         return;
     }
@@ -107,7 +102,6 @@ bool Tokenizer::should_filter_token(const std::string& token) {
         return true;
     }
 
-    // Проверяем, состоит ли токен только из цифр или специальных символов
     if (std::all_of(token.begin(), token.end(), ::isdigit)) {
         return true;
     }
@@ -140,7 +134,7 @@ void Tokenizer::skip_until_delimiter(const std::string& text, size_t& i) {
 
 void Tokenizer::handle_hashtag(const std::string& text, size_t& i, TokenizationResult& result) {
     std::string hashtag;
-    i++; // Пропускаем #
+    i++;
 
     while (i < text.length() && (std::isalnum(text[i]) || text[i] == '_')) {
         hashtag += std::tolower(text[i]);

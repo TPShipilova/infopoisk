@@ -14,13 +14,10 @@ class BooleanIndexBuilder {
 public:
     BooleanIndexBuilder();
 
-    // Построение индекса из документов
     void build_from_documents(const std::vector<Document>& documents);
 
-    // Сохранение индекса в файл
     void save_index(const std::string& filename);
 
-    // Загрузка индекса из файла
     bool load_index(const std::string& filename);
 
     // Получение статистики
@@ -46,20 +43,15 @@ private:
     Tokenizer tokenizer;
     Stemmer stemmer;
 
-    // Прямой индекс
     std::vector<ForwardIndexEntry> forward_index;
 
-    // Обратный индекс
     std::unordered_map<std::string, std::vector<uint32_t>> inverted_index;
 
-    // Статистика
     Statistics stats;
 
-    // Вспомогательные методы
     void process_document(const Document& doc, uint32_t doc_id);
     void sort_and_unique_postings();
 
-    // Сортировка для бинарного поиска
     std::vector<std::pair<std::string, std::vector<uint32_t>>> get_sorted_entries() const;
 };
 

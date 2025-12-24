@@ -44,16 +44,12 @@ public:
     BinaryIndexWriter(const std::string& filename);
     ~BinaryIndexWriter();
 
-    // Запись заголовка
     void write_header(uint32_t doc_count, uint32_t term_count);
 
-    // Запись прямого индекса
     void write_forward_index(const std::vector<ForwardIndexEntry>& entries);
 
-    // Запись обратного индекса
     void write_inverted_index(const std::vector<std::pair<std::string, std::vector<uint32_t>>>& entries);
 
-    // Получение текущей позиции
     uint64_t get_position() const;
 
 private:
@@ -71,19 +67,14 @@ public:
     BinaryIndexReader(const std::string& filename);
     ~BinaryIndexReader();
 
-    // Чтение заголовка
     bool read_header(uint32_t& doc_count, uint32_t& term_count);
 
-    // Чтение прямого индекса
     std::vector<ForwardIndexEntry> read_forward_index();
 
-    // Чтение обратного индекса
     std::vector<std::pair<std::string, std::vector<uint32_t>>> read_inverted_index();
 
-    // Быстрый поиск записи по термину (бинарный поиск)
     std::vector<uint32_t> find_term(const std::string& term);
 
-    // Получение информации о документе по ID
     ForwardIndexEntry get_document_info(uint32_t doc_id);
 
 private:
@@ -99,11 +90,10 @@ private:
     uint8_t read_uint8();
     uint64_t read_uint64();
 
-    // Кэш для быстрого доступа
     std::vector<ForwardIndexEntry> forward_cache;
     std::vector<std::pair<std::string, uint64_t>> term_positions;
 
-    void build_term_index(); // Строит индекс терминов для быстрого поиска
+    void build_term_index();
 };
 
 #endif

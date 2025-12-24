@@ -50,7 +50,7 @@ public:
         uint32_t doc_id;
         std::string title;
         std::string url;
-        double relevance = 0.0;  // Для будущего использования
+        double relevance = 0.0;
     };
 
     std::vector<SearchResult> format_results(const std::vector<uint32_t>& doc_ids,
@@ -77,13 +77,10 @@ private:
                                      const std::vector<uint32_t>& b);
     std::vector<uint32_t> complement_set(const std::vector<uint32_t>& a);
 
-    // Нормализация термина
     std::string normalize_term(const std::string& term);
 
-    // Получение постингов для термина
     std::vector<uint32_t> get_postings(const std::string& term);
 
-    // Все документы (для операции NOT)
     std::vector<uint32_t> all_documents;
 
     void init_all_documents();

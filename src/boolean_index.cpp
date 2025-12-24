@@ -5,7 +5,6 @@
 #include <cstring>
 
 BooleanIndexBuilder::BooleanIndexBuilder() {
-    // Инициализация
 }
 
 void BooleanIndexBuilder::build_from_documents(const std::vector<Document>& documents) {
@@ -24,7 +23,6 @@ void BooleanIndexBuilder::build_from_documents(const std::vector<Document>& docu
     stats.avg_term_length = 0.0;
     stats.avg_doc_length = 0.0;
 
-    // Обрабатываем каждый документ
     for (size_t i = 0; i < documents.size(); ++i) {
         process_document(documents[i], static_cast<uint32_t>(i));
     }
@@ -32,7 +30,6 @@ void BooleanIndexBuilder::build_from_documents(const std::vector<Document>& docu
     // Сортируем постинги для каждого термина
     sort_and_unique_postings();
 
-    // Собираем статистику
     size_t total_term_chars = 0;
     size_t total_doc_terms = 0;
 
@@ -65,15 +62,13 @@ void BooleanIndexBuilder::build_from_documents(const std::vector<Document>& docu
 }
 
 void BooleanIndexBuilder::process_document(const Document& doc, uint32_t doc_id) {
-    // Создаем запись в прямом индексе
     ForwardIndexEntry forward_entry;
     forward_entry.id = doc.id;
     forward_entry.url = doc.url;
     forward_entry.title = doc.title;
     forward_entry.doc_length = 0;
-    forward_entry.checksum = 0;  // Можно вычислить контрольную сумму
+    forward_entry.checksum = 0;
 
-    // Токенизируем и нормализуем контент
     auto tokenization_result = tokenizer.tokenize(doc.content);
 
     // Для каждого токена
@@ -100,7 +95,6 @@ void BooleanIndexBuilder::process_document(const Document& doc, uint32_t doc_id)
 }
 
 std::string BooleanIndexBuilder::normalize_term(const std::string& term) {
-    // Приводим к нижнему регистру
     std::string normalized = term;
     std::transform(normalized.begin(), normalized.end(), normalized.begin(),
                    [](unsigned char c) { return std::tolower(c); });
@@ -123,22 +117,17 @@ void BooleanIndexBuilder::save_index(const std::string& filename) {
 
     BinaryIndexWriter writer(filename);
 
-    // Записываем заголовок
     writer.write_header(static_cast<uint32_t>(forward_index.size()),
                        static_cast<uint32_t>(inverted_index.size()));
 
-    // Подготавливаем прямые записи
     std::vector<ForwardIndexEntry> forward_entries;
     for (size_t i = 0; i < forward_index.size(); ++i) {
         forward_entries.push_back(forward_index[i]);
-        // Можно вычислить checksum
-        forward_entries.back().checksum = i;  // Временное значение
+        forward_entries.back().checksum = i;
     }
 
-    // Записываем прямой индекс
     writer.write_forward_index(forward_entries);
 
-    // Подготавливаем обратный индекс для записи
     std::vector<std::pair<std::string, std::vector<uint32_t>>> inverted_entries;
     inverted_entries.reserve(inverted_index.size());
 
@@ -146,7 +135,6 @@ void BooleanIndexBuilder::save_index(const std::string& filename) {
         inverted_entries.emplace_back(term, postings);
     }
 
-    // Записываем обратный индекс
     writer.write_inverted_index(inverted_entries);
 
     std::cout << "Index saved successfully." << std::endl;
@@ -163,13 +151,10 @@ bool BooleanIndexBuilder::load_index(const std::string& filename) {
             return false;
         }
 
-        // Читаем прямой индекс
         forward_index = reader.read_forward_index();
 
-        // Читаем обратный индекс
         auto inverted_entries = reader.read_inverted_index();
 
-        // Преобразуем в unordered_map
         inverted_index.clear();
         inverted_index.reserve(inverted_entries.size());
 
@@ -177,7 +162,6 @@ bool BooleanIndexBuilder::load_index(const std::string& filename) {
             inverted_index[entry.first] = std::move(entry.second);
         }
 
-        // Обновляем статистику
         stats.total_documents = forward_index.size();
         stats.total_terms = inverted_index.size();
         stats.total_postings = 0;

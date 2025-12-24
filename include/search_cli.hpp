@@ -18,7 +18,6 @@ public:
 
     SearchCLI(int argc, char* argv[]);
 
-    // Запуск CLI
     int run();
 
     // Показать справку
@@ -36,7 +35,6 @@ private:
     int run_build_index();
     int run_show_stats();
 
-    // Вспомогательные методы
     void print_results(const std::vector<uint32_t>& doc_ids,
                        const std::string& query = "");
     void save_results(const std::vector<uint32_t>& doc_ids,

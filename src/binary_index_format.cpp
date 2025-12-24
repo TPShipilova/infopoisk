@@ -4,7 +4,7 @@
 #include <algorithm>
 
 // Магическое число для идентификации нашего формата
-const uint32_t MAGIC_NUMBER = 0x48534146; // "FASH" в little-endian
+const uint32_t MAGIC_NUMBER = 0x48534146;
 const uint16_t VERSION = 1;
 
 BinaryIndexWriter::BinaryIndexWriter(const std::string& filename) {
@@ -27,17 +27,15 @@ void BinaryIndexWriter::write_header(uint32_t doc_count, uint32_t term_count) {
     write_uint32(doc_count);             // document count
     write_uint32(term_count);            // term count
 
-    // Пока пишем 0, заполним позже
-    write_uint64(0);  // forward_offset
-    write_uint64(0);  // inverted_offset
-    write_uint32(0);  // reserved
-    write_uint32(0);  // reserved
+    write_uint64(0);
+    write_uint64(0);
+    write_uint32(0);
+    write_uint32(0);
 }
 
 void BinaryIndexWriter::write_forward_index(const std::vector<ForwardIndexEntry>& entries) {
     uint64_t forward_offset = get_position();
 
-    // Записываем количество документов
     write_uint32(static_cast<uint32_t>(entries.size()));
 
     for (const auto& entry : entries) {
@@ -53,13 +51,12 @@ void BinaryIndexWriter::write_forward_index(const std::vector<ForwardIndexEntry>
         // Длина документа
         write_uint32(entry.doc_length);
 
-        // Checksum (пока 0, можно использовать для проверки целостности)
+        // Checksum
         write_uint32(entry.checksum);
     }
 
-    // Возвращаемся в заголовок и обновляем offset
     uint64_t current_pos = get_position();
-    file.seekp(16, std::ios::beg);  // Позиция forward_offset в заголовке
+    file.seekp(16, std::ios::beg);
     write_uint64(forward_offset);
     file.seekp(current_pos, std::ios::beg);
 }
@@ -67,22 +64,17 @@ void BinaryIndexWriter::write_forward_index(const std::vector<ForwardIndexEntry>
 void BinaryIndexWriter::write_inverted_index(const std::vector<std::pair<std::string, std::vector<uint32_t>>>& entries) {
     uint64_t inverted_offset = get_position();
 
-    // Сортируем термины для бинарного поиска
     std::vector<std::pair<std::string, std::vector<uint32_t>>> sorted_entries = entries;
     std::sort(sorted_entries.begin(), sorted_entries.end(),
               [](const auto& a, const auto& b) { return a.first < b.first; });
 
-    // Записываем количество терминов
     write_uint32(static_cast<uint32_t>(sorted_entries.size()));
 
     for (const auto& entry : sorted_entries) {
-        // Термин
         write_string(entry.first);
 
-        // Количество документов
         write_uint32(static_cast<uint32_t>(entry.second.size()));
 
-        // Список ID документов (уже должен быть отсортирован)
         for (uint32_t doc_id : entry.second) {
             write_uint32(doc_id);
         }
@@ -90,7 +82,7 @@ void BinaryIndexWriter::write_inverted_index(const std::vector<std::pair<std::st
 
     // Обновляем заголовок
     uint64_t current_pos = get_position();
-    file.seekp(24, std::ios::beg);  // Позиция inverted_offset в заголовке
+    file.seekp(24, std::ios::beg);
     write_uint64(inverted_offset);
     file.seekp(current_pos, std::ios::beg);
 }
@@ -130,7 +122,6 @@ void BinaryIndexWriter::write_uint64(uint64_t value) {
     file.write(reinterpret_cast<const char*>(&value), sizeof(value));
 }
 
-// BinaryIndexReader implementation
 BinaryIndexReader::BinaryIndexReader(const std::string& filename) {
     file.open(filename, std::ios::binary | std::ios::in);
     if (!file) {
@@ -159,13 +150,13 @@ bool BinaryIndexReader::read_header(uint32_t& doc_count, uint32_t& term_count) {
         return false;
     }
 
-    read_uint16();  // flags
+    read_uint16();
     total_docs = read_uint32();
     total_terms = read_uint32();
     forward_offset = read_uint64();
     inverted_offset = read_uint64();
-    read_uint32();  // reserved
-    read_uint32();  // reserved
+    read_uint32();
+    read_uint32();
 
     doc_count = total_docs;
     term_count = total_terms;
@@ -253,10 +244,9 @@ std::vector<uint32_t> BinaryIndexReader::find_term(const std::string& term) {
         return {};  // Термин не найден
     }
 
-    // Читаем данные с диска
     file.seekg(it->second, std::ios::beg);
 
-    read_string(true);  // Пропускаем термин
+    read_string(true);
     uint32_t doc_count = read_uint32();
 
     std::vector<uint32_t> doc_ids;

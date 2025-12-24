@@ -21,7 +21,7 @@ struct ForwardIndexEntry {
     std::string url;
     std::string title;
     uint32_t doc_length;  // Количество терминов
-    uint64_t offset;      // Смещение в файле (для сжатых данных)
+    uint64_t offset;      // Смещение в файле
     uint32_t checksum;    // Контрольная сумма
 };
 
@@ -29,8 +29,8 @@ struct ForwardIndexEntry {
 struct InvertedIndexEntry {
     std::string term;
     std::vector<uint32_t> doc_ids;      // Список документов
-    std::vector<uint16_t> positions;    // Позиции в документе (для будущего использования)
-    std::vector<uint8_t> frequencies;   // Частоты (для будущего использования)
+    std::vector<uint16_t> positions;    // Позиции в документе
+    std::vector<uint8_t> frequencies;   // Частоты
 };
 
 #endif

@@ -78,7 +78,6 @@ void ZipfAnalyzer::save_to_csv(const ZipfAnalysis& analysis, const std::string& 
     file.close();
 }
 
-// Дополнительно: закон Мандельброта
 std::vector<double> ZipfAnalyzer::calculate_mandelbrot(const ZipfAnalysis& analysis,
                                                        double C, double B, double alpha) {
     std::vector<double> predictions;

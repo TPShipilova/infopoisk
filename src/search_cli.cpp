@@ -65,13 +65,12 @@ bool SearchCLI::parse_arguments(int argc, char* argv[]) {
             std::cerr << "Error: Unknown option: " << arg << std::endl;
             return false;
         } else {
-            // Полагаем, что это запрос для неинтерактивного поиска
             std::string query;
             for (int j = i; j < argc; ++j) {
                 if (j > i) query += " ";
                 query += argv[j];
             }
-            config.query_file = query;  // Временно используем для хранения запроса
+            config.query_file = query;
             break;
         }
     }
@@ -103,7 +102,6 @@ int SearchCLI::run() {
 int SearchCLI::run_build_index() {
     std::cout << "Building index..." << std::endl;
 
-    // Загружаем документы
     FileConnector connector("fashion_data_compact.json");
     auto documents = connector.fetch_documents();
 
@@ -118,10 +116,8 @@ int SearchCLI::run_build_index() {
     BooleanIndexBuilder index_builder;
     index_builder.build_from_documents(documents);
 
-    // Сохраняем индекс
     index_builder.save_index(config.index_file);
 
-    // Показываем статистику
     auto stats = index_builder.get_statistics();
     std::cout << "\nIndex Statistics:" << std::endl;
     std::cout << "  Documents: " << stats.total_documents << std::endl;
@@ -225,7 +221,6 @@ int SearchCLI::run_interactive() {
             }
         }
 
-        // Сохраняем результаты, если указан output файл
         if (!config.output_file.empty()) {
             save_results(results, query, config.output_file);
         }
@@ -271,7 +266,6 @@ int SearchCLI::run_batch() {
     auto total_time = std::chrono::duration_cast<std::chrono::milliseconds>(
         batch_end - batch_start).count();
 
-    // Выводим результаты
     for (size_t i = 0; i < batch_results.size(); ++i) {
         const auto& [query, results] = batch_results[i];
         std::cout << "\nQuery " << (i + 1) << ": \"" << query << "\"" << std::endl;
@@ -296,7 +290,6 @@ int SearchCLI::run_batch() {
     std::cout << "Average time per query: "
               << (queries.empty() ? 0 : total_time / queries.size()) << " ms" << std::endl;
 
-    // Сохраняем результаты, если указан output файл
     if (!config.output_file.empty()) {
         std::ofstream outfile(config.output_file);
         if (outfile) {

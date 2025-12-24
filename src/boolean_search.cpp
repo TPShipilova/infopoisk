@@ -22,7 +22,6 @@ std::vector<uint32_t> BooleanSearch::search(const std::string& query) {
     auto start_time = std::chrono::high_resolution_clock::now();
 
     try {
-        // Токенизация запроса
         auto tokens = tokenize_query(query);
 
         size_t pos = 0;
@@ -30,7 +29,6 @@ std::vector<uint32_t> BooleanSearch::search(const std::string& query) {
 
         auto end_time = std::chrono::high_resolution_clock::now();
 
-        // Сохраняем статистику
         last_stats.query = query;
         last_stats.result_count = result.size();
         last_stats.processing_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -60,7 +58,6 @@ std::vector<BooleanSearch::QueryToken> BooleanSearch::tokenize_query(const std::
             continue;
         }
 
-        // Проверяем специальные символы
         if (c == '(') {
             if (!current_term.empty()) {
                 tokens.emplace_back(TokenType::TERM, current_term);
@@ -85,21 +82,19 @@ std::vector<BooleanSearch::QueryToken> BooleanSearch::tokenize_query(const std::
                 current_term.clear();
             }
             tokens.emplace_back(TokenType::AND);
-            i++;  // Пропускаем второй символ
+            i++;
         } else if (c == '|' && i + 1 < query.length() && query[i + 1] == '|') {
             if (!current_term.empty()) {
                 tokens.emplace_back(TokenType::TERM, current_term);
                 current_term.clear();
             }
             tokens.emplace_back(TokenType::OR);
-            i++;  // Пропускаем второй символ
+            i++;
         } else {
-            // Часть термина
             current_term += c;
         }
     }
 
-    // Добавляем последний термин, если есть
     if (!current_term.empty()) {
         tokens.emplace_back(TokenType::TERM, current_term);
     }
@@ -276,7 +271,7 @@ std::vector<uint32_t> BooleanSearch::get_postings(const std::string& term) {
         return it->second;
     }
 
-    return {};  // Термин не найден
+    return {};
 }
 
 std::vector<BooleanSearch::SearchResult> BooleanSearch::format_results(
@@ -301,7 +296,6 @@ std::vector<BooleanSearch::SearchResult> BooleanSearch::format_results(
         result.title = doc_info.title.empty() ? "Untitled Document" : doc_info.title;
         result.url = doc_info.url;
 
-        // Простой расчет релевантности (можно улучшить)
         result.relevance = 1.0 / (i + 1);
 
         results.push_back(result);

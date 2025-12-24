@@ -2,7 +2,6 @@
 #include <algorithm>
 
 Stemmer::Stemmer() {
-    // Инициализация суффиксов для английского языка
     step1_suffixes = {
         "sses", "ies", "ss", "s"
     };
@@ -50,7 +49,6 @@ std::string Stemmer::stem(const std::string& word) {
 std::string Stemmer::step1(const std::string& word) {
     std::string result = word;
 
-    // ss -> ss
     if (ends_with(result, "sses")) {
         result = replace_suffix(result, "sses", "ss");
     } else if (ends_with(result, "ies")) {
@@ -71,7 +69,6 @@ std::string Stemmer::step2(const std::string& word) {
         if (ends_with(result, suffix)) {
             std::string stem = result.substr(0, result.length() - suffix.length());
             if (measure(stem) > 0) {
-                // Простое преобразование (в реальном алгоритме Портера здесь сложная логика)
                 if (suffix == "ational") {
                     return stem + "ate";
                 } else if (suffix == "tional") {
