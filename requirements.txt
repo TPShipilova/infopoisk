@@ -1,0 +1,11 @@
+requests
+beautifulsoup4==4.12.2
+pymongo==4.5.0
+pandas
+langdetect==1.0.9
+lxml
+wikipedia-api
+tqdm
+feedparser
+dotenv
+matplotlib
